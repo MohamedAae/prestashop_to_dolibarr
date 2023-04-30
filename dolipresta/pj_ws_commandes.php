@@ -389,7 +389,7 @@ function getOrder($authentication,$id='',$ref='',$ref_ext='')
 
 		if ($fuser->rights->commande->lire)
 		{
-			$order=new Commande($db); 
+			$order=new Commande($db);
 			$result=$order->fetch($id,$ref,$ref_ext);
 			if ($result > 0)
 			{
@@ -679,7 +679,7 @@ function createOrder($authentication,$order)
 	$now=dol_now();
 
 	dol_syslog("Function: createOrder login=".$authentication['login']." socid :".$order['thirdparty_id']);
-	
+
 	if ($authentication['entity']) $conf->entity=$authentication['entity'];
 
 	// Init and check authentication
@@ -704,12 +704,12 @@ function createOrder($authentication,$order)
 		$newobject->fk_project=$order['project_id'];
 		$newobject->fk_delivery_address=$order['fk_delivery_address'];
 		$newobject->cond_reglement_id=$order['cond_reglement_id'];
-		
+
 		//PJ ajout mode de reglt
 		$newobject->mode_reglement = $order['mode_reglement'];
 		$newobject->mode_reglement_code = $order['mode_reglement_code'];
 		//PJ fin
-		
+
 		$newobject->demand_reason_id=$order['demand_reason_id'];
 		$newobject->date_creation=$now;
 
@@ -765,7 +765,7 @@ function createOrder($authentication,$order)
 		dol_syslog("Webservice server_order:: order creation start", LOG_DEBUG);
 		$result=$newobject->create($fuser);
 		dol_syslog('Webservice server_order:: order creation done with $result='.$result, LOG_DEBUG);
-		
+
 		if ($result < 0)
 		{
 			dol_syslog("Webservice server_order:: order creation failed", LOG_ERR);
@@ -796,7 +796,7 @@ function createOrder($authentication,$order)
 				dol_syslog('createorder update status 4!');
 				$result=$newobject->cloture($fuser);
 				dol_syslog('createorder update status 5!');
-				$result=$newobject->classifyBilled();
+				$result=$newobject->classifyBilled($fuser);
 				dol_syslog('result classifyBilled order : '.print_r($result, true));
 			} elseif($order['status'] == '6'){ //annulée
 				dol_syslog('createorder update status 2!');
@@ -825,7 +825,7 @@ function createOrder($authentication,$order)
 					$newobject->add_contact($resultg, 102, $source='external',$notrigger=0);
 				}
 			}
-			
+
 			//invoice address
 			if ($order['id_address_invoice']) {
 				dol_syslog('createorder adresse invoice');
@@ -999,7 +999,7 @@ function updateOrder($authentication,$order)
 						// Define output language
 						$outputlangs = $langs;
 						$order->generateDocument($order->modelpdf, $outputlangs);
-					
+
 					}
 				}
 				if ($order['status'] == 0)  $result=$object->set_reopen($fuser);
@@ -1147,7 +1147,7 @@ function updateOrderStatus($authentication,$id='',$status='1')
 					}
 					if (!$order->billed) {
 						dol_syslog('updateorderstatus check 5  status = '.$status);
-						$result=$order->classifyBilled();
+						$result=$order->classifyBilled($fuser);
 						dol_syslog('result classifyBilled order : '.print_r($result, true));
 					}
 				} elseif($status == 6){ //annulée
@@ -1211,7 +1211,7 @@ function getImportedSocpeople($import_key)
 	$sql = "SELECT s.rowid";
 	$sql.= " FROM ".MAIN_DB_PREFIX."socpeople as s";
 	$sql.= " WHERE s.import_key = '".$import_key."'";
-	
+
 	$resql = $db->query($sql);
 
 	if ($resql)

@@ -104,7 +104,7 @@ class PrestashopToDolibarrPro extends Module
                 'DOLIBARR_WS_MASK_CUSTOMER',
                 'DOLIBARR_WS_MASK_PRODUCT',
                 'DOLIBARR_WS_MASK_INVOICE',
-                'DOLIBARR_WS_MASK_ORDER',		    
+                'DOLIBARR_WS_MASK_ORDER',
                 'DOLIBARR_REF_IND',
                 'DOLIBARR_VERSION',
                 'PS_LANG_DEFAULT',
@@ -166,7 +166,7 @@ class PrestashopToDolibarrPro extends Module
         if ($config['DOLIBARR_WS_MASK_ORDER']) {
             $this->ws_mask_order_value = $config['DOLIBARR_WS_MASK_ORDER'];
 	}
-	    
+
         if ($config['DOLIBARR_REF_IND']) {
             $this->dolibarr_ref_ind = $config['DOLIBARR_REF_IND'];
         }
@@ -694,7 +694,7 @@ class PrestashopToDolibarrPro extends Module
             Configuration::updateValue('DOLIBARR_IS_SYNCH_ORDER', $check_synch_order);
             Configuration::updateValue('DOLIBARR_IS_SYNCH_CATEGORY', $check_synch_category);
             Configuration::updateValue('DOLIBARR_IS_SYNCH_STATUS', $check_synch_status);
-		
+
             Configuration::updateValue('DOLIBARR_WS_MASK_CUSTOMER', $mask_customer_value);
             Configuration::updateValue('DOLIBARR_WS_MASK_PRODUCT', $mask_product_value);
             Configuration::updateValue('DOLIBARR_WS_MASK_INVOICE', $mask_invoice_value);
@@ -1062,7 +1062,7 @@ class PrestashopToDolibarrPro extends Module
         // Get product ids including external reference <> external reference, in ascending order
         $idsrefdoliproduct = $this->getRefdoliEmpty('product');
         $this->logInFile('list of product ids including doli ref <> : '.print_r($idsrefdoliproduct, true));
-        
+
         if ($idsrefdoliproduct) {
             foreach ($idsrefdoliproduct as $product) {
                 if ($product['reference'] == '') {  // empty reference => we created it
@@ -1168,7 +1168,7 @@ class PrestashopToDolibarrPro extends Module
             $this->logInFile('->product path id: '.$product['id_product'].' / '.print_r($product, true));
 
             // Loop on variations
-            foreach ($products['product_attributes_ids'] as $product_attribute_id)
+            foreach ($product['product_attributes_ids'] as $product_attribute_id)
 	    {
                 $product_ref = $this->ws_trigram_value.$this->format($product['id_product'], 10);
                 if($product_attribute_id['id_product_attribute']>0) {
@@ -1283,13 +1283,13 @@ class PrestashopToDolibarrPro extends Module
                     $result = 'KO';
                     break;
                 }
-		    
+
                 // Bug correction on id attribute in orders and invoices
                 if (array_key_exists('id_product_attribute', $product) == true) {
                     if ($product['id_product_attribute'] == $product_attribute_id['id_product_attribute']) {
                         $id_product_doli_ec = $product_ref_interne['id_ext_doli'];
                     }
-                }               
+                }
             }
 
             // number of max product reached
@@ -1303,7 +1303,7 @@ class PrestashopToDolibarrPro extends Module
                 $this->logInFile('---> max number of exported products reached, break');
                 break;
             }
-		
+
             if ($result == 'KO' || $nbr_max_product) {
                 break;
             }
@@ -3147,7 +3147,7 @@ class PrestashopToDolibarrPro extends Module
 
 		return array('msg'=>$msg);
 	}
-	
+
 	/**
 	 * Return value for a mask
 	 *
@@ -3178,7 +3178,7 @@ class PrestashopToDolibarrPro extends Module
 		$maskraz = -1;
 		$maskoffset = 0;
 		$resetEveryMonth = false;
-		
+
 		// If an offset is asked
 		if (!empty($reg[2]) && preg_match('/^\+/', $reg[2])) $maskoffset = preg_replace('/^\+/', '', $reg[2]);
 		if (!empty($reg[3]) && preg_match('/^\+/', $reg[3])) $maskoffset = preg_replace('/^\+/', '', $reg[3]);
@@ -3189,7 +3189,7 @@ class PrestashopToDolibarrPro extends Module
 		// If a restore to zero after a month is asked we check if there is already a value for this year.
 		if (!empty($reg[2]) && preg_match('/^@/', $reg[2]))	$yearoffsettype = preg_replace('/^@/', '', $reg[2]);
 		if (!empty($reg[3]) && preg_match('/^@/', $reg[3]))	$yearoffsettype = preg_replace('/^@/', '', $reg[3]);
-		
+
 		// Get counter
 		if ($mode == 'next')
 		{
